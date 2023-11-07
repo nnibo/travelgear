@@ -112,6 +112,12 @@ app.post("/cadastroprodutoviagem", async (req, res)=>{
     if(id_protudoViagem){
         return res.status(400).json({error:"o produto cadastrado ja existe "})
     }
+
+    if(QuantidadeEstoque > 39){
+        return res.status(400).json({error:"Impossivel realizar o cadastro do produto, quantidade de estoque muito grande"})
+    } else if(QuantidadeEstoque <= 0){
+        return res.status(400).json({error:"informe um numero de estoque positivo menor ou igual a 39"})
+    }
     
     try{
         const newProduto = await produto.save();
@@ -120,11 +126,7 @@ app.post("/cadastroprodutoviagem", async (req, res)=>{
         res.status(400).json({error});
     }
 
-    if(QuantidadeEstoque > 39){
-        return res.status(400).json({error:"Impossivel realizar o cadastro do produto, quantidade de estoque muito grande"})
-    } else if(QuantidadeEstoque <= 0){
-        return res.status(400).json({error:"informe um numero de estoque positivo menor ou igual a 39"})
-    }
+   
 })
 
 
