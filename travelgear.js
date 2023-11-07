@@ -65,6 +65,15 @@ app.post("/cadastrousuario", async(req, res)=>{
     })
 
 
+    if(email==null || senha==null){
+        return res.status(400).json({error: "preencha todos os dados"})
+    }
+
+    const emailexiste= await Usuario.findOne({email:email})
+    if(emailexiste){
+        return res.status(400).json({error:"o email cadastrado ja existe "})
+    }
+
     
     try{
         const newUsuario = await usuario.save();
@@ -94,7 +103,15 @@ app.post("/cadastroprodutoviagem", async (req, res)=>{
 
     })
 
-    
+
+    if(id_protudoviagem==null || descricao==null || fornecedor==null || DataFabricacao==null || QuantidadeEstoque==null){
+        return res.status(400).json({error: "preencha todos os dados"})
+    }
+
+    const id_protudoViagem= await Produto.findOne({id_protudoviagem:id_protudoviagem})
+    if(id_protudoViagem){
+        return res.status(400).json({error:"o produto cadastrado ja existe "})
+    }
     
     try{
         const newProduto = await produto.save();
@@ -103,8 +120,11 @@ app.post("/cadastroprodutoviagem", async (req, res)=>{
         res.status(400).json({error});
     }
 
-
-
+    if(QuantidadeEstoque > 39){
+        return res.status(400).json({error:"Impossivel realizar o cadastro do produto, quantidade de estoque muito grande"})
+    } else if(QuantidadeEstoque <= 0){
+        return res.status(400).json({error:"informe um numero de estoque positivo menor ou igual a 39"})
+    }
 })
 
 
@@ -113,13 +133,14 @@ app.get("/cadastrousuario", async(req, res)=>{
     res.sendFile(__dirname +"/cadastrousuario.html");
 });
 app.get("/cadastroprodutoviagem", async(req,res)=>{
-    res.sendFile(__dirname +"/cadastroprodutoviagem") // tem q criar o html
+    res.sendFile(__dirname +"/cadastroprodutoviagem.html") 
 })
 
 
 
 
 //rota raiz - inw
+
 app.get("/", async(req, res)=>{
     res.sendFile(__dirname +"/index.html");
 });
